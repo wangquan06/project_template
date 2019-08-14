@@ -6,4 +6,4 @@ eureka:
         hostname: ${spring.application.name}
         instance-id: ${spring.cloud.client.ip-address}:${server.port}
 server:
-    port: 18050
+    port: 18040
