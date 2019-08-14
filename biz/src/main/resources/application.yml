@@ -1,0 +1,32 @@
+eureka:
+    client:
+        registryFetchIntervalSeconds: 5
+    instance:
+        lease-expiration-duration-in-seconds: 90
+        lease-renewal-interval-in-seconds: 30
+        prefer-ip-address: true
+        health-check-url-path: /actuator/health
+        status-page-url-path: /actuator/info
+        metadata-map:
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+spring:
+    application:
+        name: biz
+    security:
+        user:
+          name: "admin"
+          password: "admin"
+    profiles:
+        active: dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  path: d:/logs/${spring.application.name}

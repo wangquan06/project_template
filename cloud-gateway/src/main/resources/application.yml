@@ -1,0 +1,105 @@
+eureka:
+    client:
+        registryFetchIntervalSeconds: 5
+    instance:
+        lease-expiration-duration-in-seconds: 90  #表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance(默认为90秒)
+        lease-renewal-interval-in-seconds: 30 #表示eureka client发送心跳给server端的频率
+        prefer-ip-address: true
+        health-check-url-path: /actuator/health
+        status-page-url-path: /actuator/info
+spring:
+    application:
+        name: cloud-gateway
+    profiles:
+        active: dev
+  #  cloud:
+  #      config:
+  ##          discovery:
+  ##              enabled: true #开启Config服务发现支持
+  ##              serviceId: cloud-config #指定server端的name,也就是server端spring.application.name的值
+  #          label: master
+  #          uri: http://192.168.11.121:18000
+  #          name: ${spring.application.name}   #客户端在服务端搜索配置时的名称，可以与spring.application.name不一致
+  #          profile: pro
+  #          # true: 如果访问配置中心失败，则停止启动服务
+  #          fail-fast: true
+  #          # 配置重试，默认是重试6次，最初是延迟1s再次重试，如果再失败，则延迟1.1*1s、1.1*1.1*1s、… 。可以使用这个配置
+  #          retry:
+  #            initial-interval: 2000
+  #            # 最多重试次数
+  #            max-attempts: 6
+  #            # 最大重试间隔
+  #            max-interval: 4000
+  #            # 每次重试时间是之前的倍数
+  #            multiplier: 1.2
+  #      bus:
+  #          enabled: true
+    servlet:
+      multipart:
+        enabled: true   # 启用http上传处理
+        max-file-size: 100MB      # 设置单个文件的最大长度, 默认1M
+        max-request-size: 200MB   # 设置最大的请求文件的大小, 默认10M
+        file-size-threshold: 1MB # 当上传文件达到1MB的时候进行磁盘写入
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+##路由配置##
+zuul:
+  prefix: /project/api
+  stripPrefix: true
+  ignoredServices: '*'
+  sensitive-headers: Access-Control-Allow-Origin,Access-Control-Allow-Methods
+  custom-sensitive-headers: true
+  retryable: true
+  host:
+    connect-timeout-millis: 30000
+    socket-timeout-millis: 30000
+    max-per-route-connections: 1000
+    max-total-connections: 1000
+  routes:
+    #认证管理
+    sys-auth:
+      path: /sys-auth/**/**
+      stripPrefix: true
+      serviceId: sys-auth
+    biz:
+      path: /biz/**/**
+      stripPrefix: true
+      serviceId: biz
+
+####超时配置####
+
+ribbon:
+  ReadTimeout: 100000
+  SocketTimeout: 100000
+  ConnectTimeout: 100000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+  OkToRetryOnAllOperations: false
+  eureka:
+    enabled: true
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 1000 ##并发执行的最大线程数，默认10
+      maxQueueSize: 1000 ##BlockingQueue的最大队列数
+      queueSizeRejectionThreshold: 500 ##即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+          strategy: SEMAPHORE
+
+logging:
+  path: d:/logs/${spring.application.name}

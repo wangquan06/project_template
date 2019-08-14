@@ -1,0 +1,9 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVICE_URL:http://localhost:18010/eureka}
+    instance:
+        hostname: ${spring.application.name}
+        instance-id: ${spring.cloud.client.ip-address}:${server.port}
+server:
+    port: 18040

@@ -1,0 +1,14 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVICE_URL:http://localhost:18010/eureka}
+    instance:
+        hostname: ${spring.application.name}
+        instance-id: ${spring.cloud.client.ip-address}:${server.port}
+server:
+    port: 18030
+gmoft:
+  defs:
+    datasource-username: root
+    datasource-password: wangquan
+    datasource-url: jdbc:mysql://localhost:3306/project_template?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC

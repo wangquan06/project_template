@@ -1,0 +1,14 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: ${EUREKA_SERVICE_URL:http://localhost:18010/eureka}
+    instance:
+        hostname: ${spring.application.name}
+        instance-id: ${spring.cloud.client.ip-address}:${server.port}
+server:
+    port: 18020
+
+#手动的将临时文件夹设置为自定义的文件夹，就不会被Linux删除了。
+#server:
+#  tomcat:
+#    basedir: /data/preplan-tomcat/temp

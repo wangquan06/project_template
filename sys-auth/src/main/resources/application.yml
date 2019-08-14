@@ -1,0 +1,41 @@
+eureka:
+    client:
+        registryFetchIntervalSeconds: 5
+    instance:
+        lease-expiration-duration-in-seconds: 90  #表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance(默认为90秒)
+        lease-renewal-interval-in-seconds: 30 #表示eureka client发送心跳给server端的频率
+        prefer-ip-address: true
+        health-check-url-path: /actuator/health
+        status-page-url-path: /actuator/info
+spring:
+  application:
+    name: sys-auth
+  profiles:
+    active: dev
+  datasource:
+    url: ${gmoft.defs.datasource-url}
+    username: ${gmoft.defs.datasource-username}
+    password: ${gmoft.defs.datasource-password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: true
+      connection-test-query: 'SELECT 1'
+      maximum-pool-size: 5
+    jpa:
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5Dialect
+          temp:
+            use_jdbc_metadata_defaults: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  path: d:/logs/${spring.application.name}
